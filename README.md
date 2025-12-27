@@ -13,11 +13,15 @@ Built with Python, Flask, NumPy and Plotly, the platform provides:
 
 This tool offers an accessible and cost-effective alternative to traditional engineering software for motor analysis and education.
 
+---
+
 ## Academic Information
 
 **University:** Universidade Santa Cecília (UNISANTA)  
 **Course:** Electrical Engineering  
 **Project Type:** Final Graduation Project (TCC)
+
+---
 
 ## Authors
 
@@ -29,6 +33,8 @@ This tool offers an accessible and cost-effective alternative to traditional eng
 ## Advisor
 
 - **Prof. MSc. Alexandre Shozo Onuki**
+
+---
 
 **Location:** Santos, São Paulo, Brazil  
 **License:** MIT
