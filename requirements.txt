@@ -1,0 +1,10 @@
+flask
+flask-login
+flask-sqlalchemy
+sqlalchemy
+numpy
+pandas
+plotly
+matplotlib
+scipy
+gunicorn
