@@ -14,5 +14,6 @@ Built with Python, Flask, NumPy and Plotly, the platform provides:
 This tool offers an accessible and cost-effective alternative to traditional engineering software for motor analysis and education.
 
 **Author:** Nycolas Eduardo  
+**Location:** Santos, São Paulo, Brazil  
 **License:** MIT
 
