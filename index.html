@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Simulação</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Favicon Icons -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="64x64" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <style>
+        /* Resetar estilos padrão */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        /* Estilos gerais */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+            overflow: hidden; /* Remove a barra de rolagem */
+        }
+        
+        /* Sidebar refinada */
+        .sidebar {
+            width: 230px;
+            background-color: #1f2d3d;
+            color: #ecf0f1;
+            padding: 15px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .user-info img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-info span {
+            font-size: 14px;
+            font-weight: 500;
+            color: #ecf0f1;
+        }
+
+        .sidebar-links {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .sidebar a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            width: 100%;
+            gap: 8px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a:focus {
+            background-color: #34495e;
+        }
+
+        /* Área principal */
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            width: calc(100% - 250px);
+        }
+
+
+        .action-buttons {
+            text-align: center;
+            margin-top: 10px; /* Reduz o espaçamento superior */
+        }
+
+        /* Ajuste no botão de iniciar simulação */
+        .start-simulation-button {
+            background-color: #1aff00;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            width: 200px;
+            margin: 10px auto 0; /* Reduzi o espaçamento superior do botão */
+            display: inline-block;
+            font-weight: bold;
+        }
+
+
+        .start-simulation-button:hover {
+            background-color: #0aef29ba;
+        }
+
+        /* Botão de Simular e Salvar */
+        .save-simulation-button {
+            background-color: #2ecc71;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            text-align: center;
+            transition: background-color 0.3s ease;
+            width: 200px;
+            margin: 15px auto 0;
+            display: inline-block;
+        }
+
+        .save-simulation-button:hover {
+            background-color: #27ae60;
+        }
+
+        /* Classe para exibir ou ocultar formulários */
+        .active {
+            display: block;
+        }
+
+        .inactive {
+            display: none;
+        }
+        .button-group {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    margin-bottom: 10px;
+    gap: 5px;
+}
+
+.logout-button,
+.settings-button {
+    padding: 5px 8px;
+    font-size: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout-button {
+    background-color: #e74c3c;
+    color: #ecf0f1;
+    transition: background-color 0.3s ease;
+}
+
+.logout-button i {
+    margin-right: 3px;
+}
+
+.logout-button:hover,
+.logout-button:focus {
+    background-color: #c0392b;
+}
+
+.settings-button {
+    background-color: #7f8c8d;
+    color: #ecf0f1;
+}
+
+.settings-button i {
+    font-size: 14px;
+}
+
+.settings-button:hover,
+.settings-button:focus {
+    background-color: #95a5a6;
+}
+
+/* Informações do usuário */
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.user-info img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.user-info span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #ecf0f1;
+}
+        .hidden-section {
+        display: none;
+    }
+
+
+/* Estilo para o título h3 */
+.main-content h3 {
+    font-size: 20px; /* Tamanho da fonte */
+    color: #2c3e50; /* Cor do texto */
+    font-weight: bold; /* Negrito para destacar */
+    text-align: center; /* Centraliza o texto */
+    margin-bottom: 20px; /* Espaçamento abaixo do título */
+    text-transform: uppercase; /* Transforma o texto para maiúsculas */
+    letter-spacing: 1px; /* Espaçamento entre letras */
+    border-bottom: 3px solid #1f2d3d; /* Linha decorativa abaixo do título */
+    padding-bottom: 10px; /* Espaçamento interno abaixo do texto */
+    margin-top: -20px; /* Ajuste para subir o título */
+
+}
+/* Fazer com que cada seção ocupe 50% do espaço disponível */
+.form-container > .form-group-container {
+    width: 50%;
+}
+
+/* Colocar as duas seções de seleção de formulários lado a lado */
+.form-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Estilização moderna dos formulários */
+.form-group-container {
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    flex: 1;
+    min-width: 300px;
+    transition: all 0.3s ease;
+}
+
+.form-group-container:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Campos de entrada e seleção */
+.form-group-container form input,
+.form-group-container form select {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    transition: border-color 0.3s ease;
+    background-color: #f9f9f9;
+}
+
+.form-group-container form input:focus,
+.form-group-container form select:focus {
+    border-color: #3498db;
+    outline: none;
+    background-color: #fff;
+}
+
+/* Rótulos */
+.form-group-container form label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-top: 10px;
+}
+
+/* Botões modernos em verde */
+.start-simulation-button,
+.save-simulation-button {
+    background-color: #2ecc71;
+    color: #ffffff;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 80%; /* Largura menor */
+    max-width: 200px;
+    font-weight: bold;
+    margin: 10px auto;
+    display: block;
+    margin-top: 40px; /* Ajuste para subir o título */
+
+}
+
+.start-simulation-button:hover,
+.save-simulation-button:hover {
+    background-color: #27ae60;
+    transform: scale(1.05);
+}
+
+/* Ajustando a posição das seleções */
+.form-selection-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    align-items: center;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.form-selection {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-selection label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+}
+
+.form-selection select {
+    padding: 8px;
+    font-size: 14px;
+    color: #333;
+    background-color: #f9f9f9;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.form-selection select:focus {
+    border-color: #3498db;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .form-selection-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+
+    </style>
+</head>
+
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="button-group">
+            <button onclick="window.location.href='{{ url_for('logout') }}'" class="logout-button">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+
+            <button onclick="window.location.href='{{ url_for('edit_user', user_id=user.id) }}'" class="settings-button">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+        <div class="user-info">
+            <!-- Verifica se a URL da imagem do perfil foi fornecida -->
+            <img src="{{ url_for('uploaded_file', filename=user.profile_picture) if user.profile_picture else url_for('static', filename='imagemsombra.png') }}" 
+            alt="Foto do usuário"
+            onerror="this.onerror=null;this.src='{{ url_for('static', filename='imagemsombra.png') }}';">       
+            <!-- Exibe o nome do usuário -->
+            <span>{{ user.username }}</span>  <!-- Aqui você usa user.username para mostrar o nome do usuário -->
+        </div>
+
+        <div class="sidebar-links">
+            <a href="{{ url_for('home') }}"><i class="fas fa-home"></i><span>Início</span></a>
+            <a href="{{ url_for('index') }}"><i class="fas fa-cogs"></i><span>Simulação</span></a>
+            <a href="{{ url_for('gerenciador_motor') }}"><i class="fas fa-cogs"></i><span>Gerenciador de Dados do Motor</span></a>
+            <a href="{{ url_for('informacoes_complementares') }}"><i class="fas fa-info-circle"></i><span>Informações Complementares do projeto</span></a>
+        </div>
+    </div>
+
+    <!-- Área principal fora da sidebar -->
+    <div class="form-selection-container">
+    <div class="main-content">
+        <h3>Simulador para análise de motores de indução</h3>
+        <!-- Espaço entre campo adicional e as seções de formulário -->
+    <div class="form-selection-container">
+        <div class="form-container">
+            <!-- Primeira seção de escolha de formulários (1 ou 2) -->
+            <div class="form-group-container">
+                <div class="form-selection">
+                    <label for="formSelector1">Selecione o motor de indução:</label>
+                            <!-- Espaço entre campo adicional e as seções de formulário -->
+                    <div class="form-container hidden-section">
+                        <select type="hidden" id="formSelector1" onchange="showFormGroup(1)">
+                            <option type="hidden" value="1">Modelo de impedância</option>
+                        </select>
+                    </div>
+                </div>
+
+
+                <!-- Formulários 1 e 2 -->
+                <div class="form-group-container active" id="formGroup1">
+                    <form id="form1" method="POST" action="/plot">
+                        <select id="motor" name="motor_id">
+                            {% for motor in motor_data %}
+                                <option value="{{ motor.id }}">{{ motor.name }}</option>
+                            {% else %}
+                                <option value="">Nenhum motor cadastrado</option>
+                            {% endfor %}
+                        </select>
+                        <label for="Tp_Tn">Tp/Tn:</label>
+                        <input type="number" id="Tp_Tn" name="Tp_Tn" step="0.01" placeholder="Ex: 2.1" required>
+                        <label for="rr_fator">Fator R'r:</label>
+                        <input type="number" id="rr_fator" name="rr_fator" step="0.01" placeholder="Ex: 1.2" required>
+                        <input type="hidden" name="form1_id" value="1">
+                    </form>
+                </div>
+                <div class="form-group-container inactive">
+                </div>
+            </div>
+            <br>
+
+            <!-- Segunda seção de escolha de formulários (3 ou 4) -->
+            <div class="form-group-container">
+                <div class="form-selection">
+                    <label for="formSelector2">Selecione o tipo de análise para a carga do motor:</label>
+                    <select id="formSelector2" onchange="showFormGroup(2)">
+                        <option value="3">Função personalizada</option>
+                    </select>
+                </div>
+
+                <!-- Formulários 3 e 4 -->
+                <div class="form-group-container active" id="formGroup3">
+                    <form id="form3" method="POST" action="/plot">
+                        <label for="curve_choice">Escolha a função:</label>
+                        <select id="curve_choice" name="curve_choice" required>
+                            <option value="linear">Linear</option>
+                            <option value="quadratic">Quadrática</option>
+                            <option value="cubic">Cúbica</option>
+                        </select>
+                        <label for="Tnominal">Torque em Regime Permanente (N.m):</label>
+                        <input type="number" id="Tnominal" name="Tnominal" step="0.01" placeholder="Ex: 100" required>
+                        <label for="Tinicial">Torque de Partida (N.m):</label>
+                        <input type="number" id="Tinicial" name="Tinicial" step="0.01" placeholder="Ex: 20" required>
+                        <label for="Jc">Momento de inércia da carga (m²kg):</label>
+                        <input type="number" id="Jc" name="Jc" step="0.01" placeholder="Ex: 10" required>
+                        <input type="hidden" name="form3_id" value="3">
+                    </form>
+                </div>
+
+                <div class="form-group-container inactive" id="formGroup4">
+                    <form id="form4" method="POST" action="/plot">
+                        <label for="selected_curve_torque">Selecione a Curva de Torque:</label>
+                        <select id="selected_curve_torque" name="selected_curve_torque" required>
+                            {% if torque_curves %}
+                                {% for curve in torque_curves %}
+                                    <option value="{{ curve.name }}">{{ curve.name }}</option>
+                                {% endfor %}
+                            {% else %}
+                                <option value="" disabled selected>Nenhum cadastrado realizado</option>
+                            {% endif %}
+                        </select>
+                        <label for="nr2">Rotação nominal (RPM):</label>
+                        <input type="text" id="nr2" name="nr2" pattern="[0-9]+(\.[0-9]+)?" placeholder="Ex: 1780" required>
+                        <label for="Tn2">Torque Nominal (N.m):</label>
+                        <input type="text" id="Tn2" name="Tn2" pattern="[0-9]+(\.[0-9]+)?" placeholder="Ex: 150" required>
+                        <label for="Jc">Momento de inercia da carga (m²kg):</label>
+                        <input type="number" id="Jc" name="Jc" step="0.01" placeholder="Ex: 10" required>
+                        <input type="hidden" name="form4_id" value="4">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- Botões de Ação -->
+        <div class="action-buttons">
+            <button type="button" class="start-simulation-button" onclick="submitActiveForm()">Iniciar Simulação</button>
+        </div>
+    </div>
+
+    <script>
+        function showFormGroup(group) {
+            if (group === 1) {
+                const formSelector1 = document.getElementById("formSelector1").value;
+
+                // Esconde ambos os formulários do grupo 1
+                document.getElementById("formGroup1").classList.add('inactive');
+                document.getElementById("formGroup2").classList.add('inactive');
+
+                // Mostra o formulário selecionado
+                if (formSelector1 === '1') {
+                    document.getElementById("formGroup1").classList.remove('inactive');
+                    document.getElementById("formGroup1").classList.add('active');
+                } else {
+                    document.getElementById("formGroup2").classList.remove('inactive');
+                    document.getElementById("formGroup2").classList.add('active');
+                }
+            } else if (group === 2) {
+                const formSelector2 = document.getElementById("formSelector2").value;
+
+                // Esconde ambos os formulários do grupo 2
+                document.getElementById("formGroup3").classList.add('inactive');
+                document.getElementById("formGroup4").classList.add('inactive');
+
+                // Mostra o formulário selecionado
+                if (formSelector2 === '3') {
+                    document.getElementById("formGroup3").classList.remove('inactive');
+                    document.getElementById("formGroup3").classList.add('active');
+                } else {
+                    document.getElementById("formGroup4").classList.remove('inactive');
+                    document.getElementById("formGroup4").classList.add('active');
+                }
+            }
+        }
+
+        function submitActiveForm() {
+        const form1 = document.getElementById("formSelector1").value;
+        const form2 = document.getElementById("formSelector2").value;
+
+        // Criar um formulário temporário
+        const tempForm = document.createElement('form');
+        tempForm.method = 'POST';
+        tempForm.action = '/plot';  // Rota para enviar os dados para o Flask
+
+        // Adicionar os campos form1 e form2 ao formulário temporário
+        const inputForm1 = document.createElement('input');
+        inputForm1.type = 'hidden';
+        inputForm1.name = 'form1_id';
+        inputForm1.value = form1;
+        tempForm.appendChild(inputForm1);
+
+        const inputForm2 = document.createElement('input');
+        inputForm2.type = 'hidden';
+        inputForm2.name = 'form2_id';
+        inputForm2.value = form2;
+        tempForm.appendChild(inputForm2);
+
+        // Adiciona campos de entrada específicos para cada formulário, se ativos
+        if (form1 === '1') {
+            // Adicionar entradas do formulário 1 (impedância)
+            appendFormData('form1');
+        } else if (form1 === '2') {
+            // Adicionar entradas do formulário 2 (dados típicos)
+            appendFormData('form2');
+        }
+
+        if (form2 === '3') {
+            // Adicionar entradas do formulário 3 (função personalizada)
+            appendFormData('form3');
+        } else if (form2 === '4') {
+            // Adicionar entradas do formulário 4 (dados típicos de torque)
+            appendFormData('form4');
+        }
+
+        // Função para adicionar os campos de um formulário ao formulário temporário
+        function appendFormData(formId) {
+            const formElements = document.getElementById(formId).elements;
+            for (let i = 0; i < formElements.length; i++) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = formElements[i].name;
+                input.value = formElements[i].value;
+                tempForm.appendChild(input);
+            }
+        }
+
+        // Adicionar o formulário temporário ao body e submeter
+        document.body.appendChild(tempForm);
+        tempForm.submit();
+    }
+
+</script>
+
+    </body>
+
+</html>

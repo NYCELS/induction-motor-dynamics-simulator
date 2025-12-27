@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Gerenciador Motor</title>
+    <!-- Favicon Icons -->
+    <link rel="icon" type="image/x-icon" href="icon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Favicon Icons -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="64x64" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <style>
+     /* Resetar estilos padrão */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos gerais do body */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f4f6f9; /* Fundo claro para melhor contraste */
+    color: #333; /* Cor do texto mais escura para legibilidade */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+    overflow-x: hidden; /* Evitar rolagem horizontal */
+}
+
+/* Sidebar refinada */
+.sidebar {
+    width: 230px;
+    background-color: #1f2d3d; /* Cor mais azulada e suave */
+    color: #ecf0f1;
+    padding: 15px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+        .button-group {
+        display: flex;
+        justify-content: flex-start;
+        width: 100%;
+        margin-bottom: 10px;
+        gap: 5px;
+        }
+
+        .logout-button,
+        .settings-button {
+            padding: 5px 8px;
+            font-size: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logout-button {
+            background-color: #e74c3c;
+            color: #ecf0f1;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-button i {
+            margin-right: 3px;
+        }
+
+        .logout-button:hover,
+        .logout-button:focus {
+            background-color: #c0392b;
+        }
+
+        .settings-button {
+            background-color: #7f8c8d;
+            color: #ecf0f1;
+        }
+
+        .settings-button i {
+            font-size: 14px;
+        }
+
+        .settings-button:hover,
+        .settings-button:focus {
+            background-color: #95a5a6;
+        }
+
+/* Informações do usuário */
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.user-info img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.user-info span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #ecf0f1;
+}
+
+/* Links de navegação */
+.sidebar-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.sidebar a {
+    color: #ecf0f1;
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    width: 100%;
+}
+
+.sidebar a i {
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+.sidebar a:hover,
+.sidebar a:focus {
+    background-color: #34495e;
+    transform: translateX(5px);
+}
+
+.sidebar a:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 4px;
+}
+
+/* Centralização do título e dos botões */
+.form-group-container {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+h3 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.form-group-container form {
+    background-color: #2c3e50;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 600px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-group-container label {
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
+    font-size: 16px;
+    color: #ecf0f1;
+}
+
+.form-group-container input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    font-size: 16px;
+    background-color: #444;
+    color: #ecf0f1;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group-container input[type="text"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+    background-color: #555;
+    outline: none;
+}
+
+/* Botões e área de navegação estilizados */
+.nav-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+.nav-buttons button {
+    padding: 20px 40px;
+    border: none;
+    border-radius: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #a72828, #882121);
+    color: white;
+    transition: background-color 0.4s ease, transform 0.3s ease, box-shadow 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.nav-buttons button i {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.nav-buttons button:hover {
+    background: linear-gradient(135deg, #882121, #7e1e1e);
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Seção de atualizações */
+.status-update {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 40px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+    text-align: center;
+    color: #333;
+}
+
+.status-update h4 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #007bff;
+}
+
+.status-update p {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Rodapé */
+footer {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    padding: 20px;
+    text-align: center;
+    font-size: 14px;
+    margin-top: auto;
+}
+
+footer a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+
+    .form-group-container {
+        margin-left: 0;
+        width: 100%;
+        padding: 10px;
+    }
+
+    .nav-buttons button {
+        padding: 15px;
+        font-size: 20px;
+    }
+}
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar fixa -->
+    <div class="sidebar" id="sidebar">
+        <div class="button-group">
+            <button onclick="window.location.href='{{ url_for('logout') }}'" class="logout-button">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+
+            <button onclick="window.location.href='{{ url_for('edit_user', user_id=user.id) }}'" class="settings-button">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+        <div class="user-info">
+            <!-- Exemplo de exibição da foto do usuário no template -->
+            <img src="{{ url_for('static', filename=user_profile_image_url) if user_profile_image_url else url_for('static', filename='images/imagemsombra.png') }}" 
+                alt="Foto do usuário" 
+                onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/imagemsombra.png') }}';">
+        
+                <span>{{ username }}</span>
+            </div>
+
+        <div class="sidebar-links">
+            <a href="{{ url_for('home') }}"><i class="fas fa-home"></i><span>Início</span></a>
+            <a href="{{ url_for('index') }}"><i class="fas fa-cogs"></i><span>Simulação</span></a>
+            <a href="{{ url_for('gerenciador_motor') }}"><i class="fas fa-cogs"></i><span>Gerenciador de Dados do Motor</span></a>
+            <a href="{{ url_for('informacoes_complementares') }}"><i class="fas fa-info-circle"></i><span>Informações Complementares do projeto</span></a>
+        </div>
+    </div>
+    <div class="form-group-container">
+        <h3>Gerenciador de Dados do motor</h3>
+        <!-- Botões para navegação com ícones -->
+        <div class="nav-buttons">
+            <button onclick="window.location.href='{{ url_for('motor') }}'">
+                <i class="fas fa-plus-circle"></i>Registrar Motor
+            </button>
+            <!-- Botão para Editar Dados -->
+            <button onclick="window.location.href='{{ url_for('editar_motor') }}'">
+                <i class="fas fa-edit"></i> Editar Motor
+            </button>
+            <button onclick="window.location.href='{{ url_for('deletar_motor') }}'">
+                <i class="fas fa-trash-alt"></i>Eliminar Motor
+            </button>
+        </div>
+    </div>
+
+</body>
+</html>

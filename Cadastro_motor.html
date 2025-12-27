@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Registro motor</title>
+    <!-- Favicon Icons -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="64x64" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+       /* Resetar estilos padrão */
+       * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Estilos gerais do body */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f0f0f0; /* Removendo gradiente e aplicando fundo sólido */
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 230px;
+            background-color: #1f2d3d;
+            color: #ecf0f1;
+            padding: 15px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: flex-start;
+            width: 100%;
+            margin-bottom: 10px;
+            gap: 5px;
+        }
+
+        .logout-button,
+        .settings-button {
+            padding: 5px 8px;
+            font-size: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logout-button {
+            background-color: #e74c3c;
+            color: #ecf0f1;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-button:hover {
+            background-color: #c0392b;
+        }
+
+        .settings-button {
+            background-color: #7f8c8d;
+            color: #ecf0f1;
+        }
+
+        .settings-button:hover {
+            background-color: #95a5a6;
+        }
+
+        /* Informações do usuário */
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .user-info img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-info span {
+            font-size: 14px;
+            font-weight: 500;
+            color: #ecf0f1;
+        }
+
+        /* Links de navegação */
+        .sidebar-links {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        .sidebar a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            width: 100%;
+        }
+
+        .sidebar a i {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a:focus {
+            background-color: #34495e;
+            transform: translateX(5px);
+        }
+
+        .form-group-container {
+            margin-left: 230px; /* Para que o formulário ocupe o espaço ao lado da sidebar */
+            padding: 20px; /* Aumentando o padding para dar mais espaço ao conteúdo */
+            width: calc(100% - 230px); /* O formulário vai ocupar o restante da tela */
+            display: flex;
+            flex-direction: column;
+            align-items: left;
+            background-color: white; /* Fundo branco para o formulário */
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            min-height: 100vh; /* Garantir que o formulário preencha toda a altura da tela */
+        }
+        h3 {
+    text-align: left !important; /* Forçar alinhamento à esquerda */
+    font-size: 40px;
+    font-weight: 700;
+    color: #333;
+    margin-top: 20px; /* Diminuindo a margem superior */
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 3px solid #1f2d3d;
+}
+
+
+
+        h4 {
+            font-size: 24px; /* Aumentando o tamanho da fonte */
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1f2d3d;
+            text-transform: uppercase;
+            border-bottom: 2px solid #1f2d3d; /* Linha decorativa */
+            padding-bottom: 10px;
+        }
+
+
+        .form-group-container h3 {
+            text-align: left !important;
+        }
+
+        /* Títulos das seções (h4) */
+        .form-section h4 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1f2d3d;
+            text-transform: uppercase;
+            border-bottom: 2px solid #1f2d3d;
+            padding-bottom: 10px;
+        }
+
+/* Ajustar o fundo para se estender até a frase do título */
+.form-group-container form {
+    background-color: white; /* Certifique-se de que o fundo é branco */
+    padding: 20px; /* Aumente o padding para que fique mais espaçoso */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 2px; /* Diminua o gap para reduzir a distância entre o título e os campos */
+}
+
+.form-row-fields {
+    display: flex; /* Coloca os campos lado a lado */
+    justify-content: space-between; /* Distribui os campos igualmente */
+    gap: 20px; /* Espaço entre os campos */
+}
+
+.form-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2px; /* Diminua o espaçamento entre o label e o campo */
+    flex: 1;
+}
+
+
+h4 {
+    margin-bottom: 10px; /* Espaço entre o título e os campos */
+}
+
+
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .form-group-name {
+    grid-column: span 6;
+    margin-bottom: 2px; /* Ajuste o valor conforme necessário */
+}
+        /* Estilos dos labels e inputs */
+        .form-group-container label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .form-group-container input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 16px;
+            background-color: white; /* Cor branca para os campos */
+            color: #333;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-group-container input[type="text"]:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+            outline: none;
+        }
+
+        /* Botão para salvar centralizado */
+        .start-simulation-button {
+            background-color: #007bff;
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            display: block;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto; /* Centralizando o botão */
+        }
+
+        .start-simulation-button:hover {
+            background-color: #0056b3;
+            transform: translateY(-120px);
+        }
+
+        /* Campos dinâmicos */
+        .dynamic-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .field-pair {
+            display: flex;
+            gap: 15px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            gap: 10px;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            color: white;
+        }
+
+        .button-container button.add-fields {
+            background-color: #28a745;
+        }
+
+        .button-container button.add-fields:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+
+        .button-container button.remove-fields {
+            background-color: #dc3545;
+        }
+
+        .button-container button.remove-fields:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        button[type="submit"] {
+            background-color: #28a745; /* Cor verde para o botão */
+            color: #ffffff; /* Texto branco */
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: block;
+            margin: 20px auto; /* Centraliza o botão */
+            margin-bottom: 20px;
+        }
+
+button[type="submit"]:hover {
+    background-color: #218838; /* Cor verde escura no hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-2px); /* Efeito de leve elevação */
+}
+
+button[type="submit"]:active {
+    background-color: #1e7e34; /* Cor mais escura ao clicar */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+    transform: translateY(0); /* Remover a elevação ao pressionar */
+}
+
+/* Estilo para o select de Tipo de Partida */
+select#tipo_partida {
+    height: 36px;  /* Ajuste a altura para coincidir com os outros campos */
+    background-color: #ffffff;
+    color: #333;
+    padding: 8px 12px;
+    font-size: 10px;  /* Tamanho do texto reduzido */
+    border: 1px solid #ced4da;
+    border-radius: 8px;
+    appearance: none;
+    cursor: pointer;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;
+    display: flex;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* Seta personalizada para o select */
+select#tipo_partida::after {
+    content: "▼"; /* Seta para baixo */
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #333;
+    pointer-events: none;
+    font-size: 12px;
+}
+
+/* Estilo de hover e foco no select */
+select#tipo_partida:hover,
+select#tipo_partida:focus {
+    border-color: #28a745; /* Verde para combinar com o botão */
+    box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+    outline: none;
+}
+.form-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+        border-radius: 8px;
+    }
+    
+    .form-container label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-container input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .form-container .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+/* Diminuir o tamanho da fonte dos labels e inputs */
+.form-group-container label {
+    font-size: 10px;  /* Diminuir o tamanho da fonte do label */
+}
+
+.form-group-container input[type="text"] {
+    font-size: 10px;  /* Diminuir o tamanho da fonte dos inputs */
+}
+
+.start-simulation-button {
+    font-size: 13px;  /* Diminuir o tamanho da fonte do botão */
+}
+
+button[type="submit"] {
+    font-size: 4px;  /* Diminuir o tamanho da fonte do botão */
+}
+
+.form-group-container button {
+    grid-column: span 6; /* O botão ocupa as 6 colunas */
+    padding: 12px 20px;
+    background-color: #4CAF50; /* Exemplo de cor do botão */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: flex-start; /* Move o botão mais para cima no grid */
+
+}
+
+.form-group-container button:hover {
+    background-color: #45a049; /* Cor do botão quando hover */
+}
+select#tipo_partida {
+    font-size: 10px;  /* Define o tamanho da fonte como 10px */
+}
+
+/* Estilo para cada seção dentro do formulário */
+.form-section {
+    margin-bottom: 30px; /* Espaço entre as seções */
+    display: flex;
+    flex-direction: column; /* Alinha as seções uma embaixo da outra */
+}
+
+    </style>
+</head>
+
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="button-group">
+            <button onclick="window.location.href='{{ url_for('logout') }}'" class="logout-button">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+
+            <button onclick="window.location.href='{{ url_for('edit_user', user_id=user.id) }}'" class="settings-button">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+        <div class="user-info">
+            <!-- Exemplo de exibição da foto do usuário no template -->
+            <img src="{{ url_for('static', filename=user_profile_image_url) if user_profile_image_url else url_for('static', filename='images/imagemsombra.png') }}" 
+                alt="Foto do usuário" 
+                onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/imagemsombra.png') }}';">
+        
+                <span>{{ username }}</span>
+            </div>
+
+        <div class="sidebar-links">
+            <a href="{{ url_for('home') }}"><i class="fas fa-home"></i><span>Início</span></a>
+            <a href="{{ url_for('index') }}"><i class="fas fa-cogs"></i><span>Simulação</span></a>
+            <a href="{{ url_for('gerenciador_motor') }}"><i class="fas fa-cogs"></i><span>Gerenciador de Dados do Motor</span></a>
+            <a href="{{ url_for('informacoes_complementares') }}"><i class="fas fa-info-circle"></i><span>Informações Complementares do projeto</span></a>
+        </div>
+    </div>
+
+    <div class="form-group-container">
+        <h4>Registro de um novo motor</h4>
+        <form action="/motor" method="POST">
+            <div class="form-group-name">
+                <label for="name">Nome do motor:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <!-- Seção 3: Parâmetros Mecânicos -->
+            <div class="form-row">
+                <h4>Parâmetros de Potência e Eficiência:</h4>
+                <div class="form-column">
+                    <label for="P">Potência (KW):</label>
+                    <input type="text" id="P" name="P" pattern="[0-9]+(\.[0-9]+)?" placeholder="Ex: 120"><br>
+                </div>
+                <div class="form-column">
+                    <label for="rend">Rendimento (%):</label>
+                    <input type="text" id="rend" name="rend" pattern="[0-9]+(\.[0-9]+)?" placeholder="Ex: 0.94"><br>
+                </div>
+
+                <div class="form-column">
+                    <label for="Fp">Fator de potência:</label>
+                <input type="text" id="Fp" name="Fp" pattern="[0-9]+(\.[0-9]+)?" placeholder="Ex: 0.85"><br>
+                </div>
+                <div class="form-column">
+                    <label for="Fpv">Fator de potência em vazio:</label>
+                    <input type="text" id="Fpv" name="Fpv" pattern="[0-9]+(\.[0-9]+)?" placeholder="Ex: 25"><br>
+                </div>
+
+                <div class="form-column">
+                    <label for="Pav">Perdas de atrito e ventilação (W):</label>
+                    <input type="text" id="Pav" name="Pav" pattern="[0-9]+(\.[0-9]+)?" placeholder="Ex: 25"><br>
+                </div>
+    
+                <div class="form-column">
+                    <label for="Pe">Perdas ferromagneticas (W):</label>
+                    <input type="text" id="Pe" name="Pe" pattern="[0-9]+(\.[0-9]+)?" placeholder="Ex: 25"><br>
+                </div>
+
+            </div>
+
+
+            <!-- Seção 3: Parâmetros Mecânicos -->
+            <div class="form-row">
+                <h4>Parâmetros Elétricos:</h4>
+
+                <div class="form-column">
+                    <label for="V">Tensão (V):</label>
+                    <input type="text" id="V" name="V" pattern="[0-9]+(\.[0-9]+)?" placeholder="Ex: 1900"><br>
+                </div>
+                <div class="form-column">
+                    <label for="f">Frequência (Hz):</label>
+                    <input type="text" id="f" name="f" pattern="[0-9]+(\.[0-9]+)?" placeholder="Ex: 60"><br>
+                </div>
+
+
+            <div class="form-column">
+                <label for="Iv">Corrente nominal em vazio (A):</label>
+                <input type="text" id="Iv" name="Iv" pattern="[0-9]+(\.[0-9]+)?" placeholder="Ex: 25"><br>
+            </div>
+
+
+            <div class="form-column">
+                <label for="Vf">Tensão de linha da fonte (V):</label>
+                <input type="text" id="Vf" name="Vf" pattern="[0-9]+(\.[0-9]+)?" placeholder="Ex: 25"><br>
+            </div>
+            <div class="form-column">
+                <label for="rs">Resistência do Estator (Ω):</label>
+                <input type="text" id="rs" name="rs" pattern="[0-9]+(\.[0-9]+)?" placeholder="Ex: 1.2"><br>
+            </div>
+
+            <div class="form-column">
+                <label for="xs">Reatância do Estator (Ω):</label>
+                <input type="text" id="xs" name="xs" pattern="[0-9]+(\.[0-9]+)?" placeholder="Ex: 2.8"><br>
+            </div>
+
+            <div class="form-column">
+                <label for="rr">Resistência do Rotor (Ω):</label>
+                <input type="text" id="rr" name="rr" pattern="[0-9]+(\.[0-9]+)?" placeholder="Ex: 0.8"><br>
+            </div>
+
+            <div class="form-column">
+                <label for="xr">Reatância do Rotor (Ω):</label>
+                <input type="text" id="xr" name="xr" pattern="[0-9]+(\.[0-9]+)?" placeholder="Ex: 2.8"><br>
+            </div>
+        </div>
+
+
+        <div class="form-row">
+            <h4>Parâmetros Mecânicos e Operacionais:</h4>
+
+                <div class="form-column">
+                    <label for="Jm">Momento de Inércia do motor (m²kg):</label>
+                    <input type="text" id="Jm" name="Jm" pattern="[0-9]+(\.[0-9]+)?" placeholder="Ex: 25"><br>
+                </div>
+
+            <div class="form-column">
+                <label for="tipo_partida">Tipo de Partida:</label>
+                <select name="tipo_partida" id="tipo_partida">
+                    <option value="Direta">Partida Direta</option>
+                    <option value="Estrela-triangulo">Partida Estrela-Triângulo</option>
+                    <option value="Autotransformador">Partida com Autotransformador</option>
+                </select>
+                <div id="fator_container" style="display:none;">
+                    <label for="fator">Fator do Autotransformador (%):</label>
+                    <input type="text" id="fator" name="fator" placeholder="Ex: 80">
+                </div>
+            </div>
+
+            <div class="form-column">
+                <label for="Wn">Velocidade nominal (RPM):</label>
+                <input type="text" id="Wn" name="Wn" pattern="[0-9]+(\.[0-9]+)?" placeholder="Ex: 25"><br>
+            </div>
+
+        </div>
+
+                <input type="hidden" name="user_id" value="{{ user_id }}">
+            <button type="submit">Salvar</button>
+    </div>
+
+    <script>
+
+        document.getElementById('tipo_partida').addEventListener('change', function() {
+        var fatorContainer = document.getElementById('fator_container');
+        if (this.value === 'Autotransformador') {
+            fatorContainer.style.display = 'block';
+        } else {
+            fatorContainer.style.display = 'none';
+        }
+    });
+    </script>
+
+</body>
+</html>

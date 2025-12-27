@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>GUI</title>
+    <!-- Favicon Icons -->
+    <link rel="icon" type="image/x-icon" href="icon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- Favicon Icons -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="64x64" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body, html {
+    overflow: hidden; /* Bloqueia a rolagem */
+    height: 100%; /* Garante que a altura ocupe toda a tela */
+}
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    display: flex;
+    min-height: 100vh;
+    zoom: 100%;
+}
+
+
+.button-group {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    margin-bottom: 10px;
+    gap: 5px;
+}
+
+.logout-button,
+.settings-button {
+    padding: 5px 8px;
+    font-size: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout-button {
+    background-color: #e74c3c;
+    color: #ecf0f1;
+    transition: background-color 0.3s ease;
+}
+
+.logout-button i {
+    margin-right: 3px;
+}
+
+.logout-button:hover,
+.logout-button:focus {
+    background-color: #c0392b;
+}
+
+.settings-button {
+    background-color: #7f8c8d;
+    color: #ecf0f1;
+}
+
+.settings-button i {
+    font-size: 14px;
+}
+
+.settings-button:hover,
+.settings-button:focus {
+    background-color: #95a5a6;
+}
+
+/* Informações do usuário */
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+}
+
+.user-info img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.user-info span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #ecf0f1;
+}
+
+        /* Sidebar refinada */
+        .sidebar {
+        width: 230px;
+        background-color: #1f2d3d; /* Cor mais azulada e suave */
+        color: #ecf0f1;
+        padding: 15px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .user-info img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-info span {
+            font-size: 14px;
+            font-weight: 500;
+            color: #ecf0f1;
+        }
+
+        /* Links de navegação */
+        .sidebar-links {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+        }
+        
+        .sidebar a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            width: 100%;
+            gap: 8px; /* Espaço entre o símbolo e o texto */
+
+        }
+
+        .sidebar a:hover,
+        .sidebar a:focus {
+        color: #ecf0f1;
+        text-decoration: none;
+        font-size: 14px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 8px 12px;
+        border-radius: 4px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        width: 100%;
+        }
+
+/* Container */
+.container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 120px;
+    padding: 0 10px;
+    flex: 1;
+}
+
+.content-row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.header-row {
+    display: flex;
+    justify-content: flex-start; /* Alinhar tudo à esquerda */
+    align-items: center;
+    gap: 20px; /* Espaço entre botão e indicador */
+    margin-bottom: 10px;
+}
+
+.buttons-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.print-button, .export-button {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    padding: 6px 12px;
+    font-size: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
+    font-weight: 600;
+}
+.export-button {
+    width: 250px; /* Igual à largura do indicador */
+    text-align: center;
+    padding: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    /* Remova o margin-top */
+    margin-top: 30px;
+    margin-bottom: 2px; /* Adicione um espaço entre o botão e o indicador */
+}
+
+
+.print-button:hover, .export-button:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #003a75 100%);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Indicators */
+.indicators-container {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+}
+
+.indicator {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #ffffff 0%, #f7f9fc 100%);
+    padding: 50px; /* Aumente o valor do padding para aumentar a altura */
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 250px;
+    height: 90px;
+    margin-top: 10px; /* Desce a tabela */
+}
+
+.indicator .value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #007bff;
+}
+
+.indicator .label {
+    font-size: 12px;
+    color: #555;
+}
+
+/* Tabela de parâmetros */
+.side-table {
+    background-color: white;
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 250px; /* Limite máximo de largura */
+    font-size: 10px; /* Texto levemente maior */
+    text-align: center;
+    min-height: 350px; /* Aumentar a altura mínima */
+    max-height: 350px; /* Limitar a altura máxima */
+    overflow-y: auto; /* Permite rolagem vertical se necessário */
+}
+
+.side-table th, .side-table td {
+    padding: 4.5px; /* Aumentar o espaçamento interno */
+    line-height: 1.1; /* Ajustar a altura da linha */
+    border: 1px solid #d1d5db;
+}
+
+.side-table th {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+    font-size: 8px; /* Tamanho do texto um pouco maior */
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.side-table td {
+    background-color: #fdfdfd;
+    color: #000;
+    font-size: 8px; /* Tamanho do texto um pouco maior */
+}
+
+
+/* Gráfico à direita da tabela */
+.graph-container {
+    flex: 1;
+    background-color: #ffffff;
+    padding: 5px; /* Reduz o padding */
+    border-radius: 8px; /* Mantenha bordas arredondadas */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 30px; /* Largura ajustada */
+    height: 540px; /* Altura reduzida ainda mais */
+    position: relative;
+    margin-top: -90px; /* Ajuste esse valor conforme necessário */
+    top: -70px; /* Suba o gráfico ajustando esse valor */
+}
+
+.graph {
+    width: 720px; /* Largura do gráfico ajustada */
+    border-radius: 6px; /* Mantenha bordas arredondadas */
+    border: 1px solid #d1d5db; /* Borda fina */
+    height: 520px; /* Altura reduzida ainda mais */
+
+}
+
+/* Botões de navegação do gráfico (inicialmente escondidos e pequenos) */
+.arrow-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) scale(0); /* Inicialmente invisível (muito pequeno) */
+    font-size: 14px;
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.1); /* Altamente transparente */
+    color: white;
+    border: none;
+    padding: 8px;
+    z-index: 10;
+    border-radius: 50%;
+    opacity: 0; /* Tornar invisível inicialmente */
+    transition: transform 0.3s ease, background-color 0.3s ease, opacity 0.3s ease;
+}
+
+/* Botão à esquerda (dentro do gráfico) */
+.arrow-button.left {
+    left: 10px; /* Posicionado 10px a partir da borda esquerda do gráfico */
+}
+
+/* Botão à direita (dentro do gráfico) */
+.arrow-button.right {
+    right: 10px; /* Posicionado 10px a partir da borda direita do gráfico */
+}
+
+/* Quando o mouse passar sobre o gráfico */
+.graph-container:hover .arrow-button {
+    transform: translateY(-50%) scale(1); /* Botões crescem ao tamanho normal */
+    background-color: rgba(0, 0, 0, 0.5); /* Reduz a transparência para torná-los visíveis */
+    opacity: 1; /* Aparecem completamente */
+}
+
+/* Efeito hover para botões (opacidade e fundo mais escuros) */
+.arrow-button:hover {
+    background-color: rgba(0, 0, 0, 0.7); /* Fundo mais escuro ao passar o mouse */
+}
+
+/* Tooltip para explicação detalhada das variáveis */
+.tooltip {
+    position: absolute;
+    top: 50px; /* Posiciona abaixo dos botões */
+    right: 10px;
+    width: 250px;
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    font-size: 12px;
+    display: none; /* Inicialmente escondido */
+    z-index: 1000;
+}
+
+/* Exibir a tooltip ao passar o mouse no botão detalhado */
+#detailed-info-button:hover + .tooltip {
+    display: block;
+}
+
+/* Oculta a tooltip inicialmente */
+.tooltip {
+    display: none;
+    position: absolute;
+    top: 40px; /* Ajuste para posicionar próximo ao botão */
+    left: 50px; /* Ajuste para posicionar próximo ao botão */
+    width: 250px;
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    font-size: 12px;
+    z-index: 1000;
+}
+
+/* Exibir a tooltip quando um gráfico estiver ativo */
+.graph:hover + .tooltip {
+    display: block;
+}
+
+    </style>
+</head>
+<body>
+    <div class="sidebar" id="sidebar">
+        <div class="button-group">
+            <button onclick="window.location.href='{{ url_for('logout') }}'" class="logout-button">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+
+            <button onclick="window.location.href='{{ url_for('edit_user', user_id=user.id) }}'" class="settings-button">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+        <div class="user-info">
+            <!-- Exemplo de exibição da foto do usuário no template -->
+            <img src="{{ url_for('static', filename=user_profile_image_url) if user_profile_image_url else url_for('static', filename='images/imagemsombra.png') }}" 
+                alt="Foto do usuário" 
+                onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/imagemsombra.png') }}';">
+        
+                <span>{{ username }}</span>
+            </div>
+
+        <div class="sidebar-links">
+            <a href="{{ url_for('home') }}"><i class="fas fa-home"></i><span>Início</span></a>
+            <a href="{{ url_for('index') }}"><i class="fas fa-cogs"></i><span>Simulação</span></a>
+            <a href="{{ url_for('gerenciador_motor') }}"><i class="fas fa-cogs"></i><span>Gerenciador de Dados do Motor</span></a>
+            <a href="{{ url_for('informacoes_complementares') }}"><i class="fas fa-info-circle"></i><span>Informações Complementares do projeto</span></a>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <div class="container">
+            <!-- Cabeçalho com Botões e Indicadores -->
+                    <!-- Botão de Exportação -->
+            <button class="export-button" onclick="exportToExcel()">Exportar dados</button>
+            <div class="header-row">
+                <!-- Indicador de Tempo de Aceleração -->
+                <div class="indicator" id="acceleration-time">
+                    <div class="label">Tempo de aceleração (s)</div>
+                    <div class="value" id="value-display3">{{ additional_values['Tempo de Aceleração Total (seg)'] }}</div>
+                </div>
+            </div>
+        
+            <div class="content-row"> 
+                <!-- Lado esquerdo: Tabela -->
+                <div class="side-table-container">
+                    <table class="side-table">
+                        <thead>
+                            <tr>
+                                <th>Parâmetros do Motor</th>
+                                <th>Valores</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Modelo do Motor</td><td>{{ additional_values['Modelo do motor'] }}</td></tr>
+                            <tr><td>Modelo de torque de carga</td><td>{{ additional_values['Modelo da carga'] }}</td></tr>
+                            <tr><td>Momento de Inércia do Motor (Kg.m²)</td><td>{{ additional_values['Momento de Inércia do Motor (Kg.m²)'] }}</td></tr>
+                            <tr><td>Momento de Inércia da Carga (Kg.m²)</td><td>{{ additional_values['Momento de inércia da Carga (Kg.m²)'] }}</td></tr>
+                            <tr><td>Potência do Motor (kW)</td><td>{{ additional_values['Potência do motor (kW)'] }}</td></tr>
+                            <tr><td>Reatância de Magnetização (Ω)</td><td>{{ additional_values['Reatância de Magnetização (Ω)'] }}</td></tr>
+                            <tr><td>Reatância do Rotor (Ω)</td><td>{{ additional_values['Reatância do Rotor (Ω)'] }}</td></tr>
+                            <tr><td>Reatância do Estator (Ω)</td><td>{{ additional_values['Reatância do Estator (Ω)'] }}</td></tr>
+                            <tr><td>Resistência do Rotor (Ω)</td><td>{{ additional_values['Resistência do Rotor (Ω)'] }}</td></tr>
+                            <tr><td>Resistência do Estator (Ω)</td><td>{{ additional_values['Resistência do Estator (Ω)'] }}</td></tr>
+                            <tr><td>Rotação Nominal do Motor (RPM)</td><td>{{ additional_values['Rotação Nominal do Motor (RPM)'] }}</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            
+                <!-- Lado direito: Gráfico -->
+                <div class="graph-container">
+                    <div class="graph">
+                        <!-- Botão de ajuda no topo do contêiner do gráfico -->
+                        <button class="info-button" id="detailed-info-button" onmouseover="showTooltipContent()" onmouseout="hideTooltip()">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                        
+                        <!-- Tooltip dinâmica para explicação das variáveis -->
+                        <div class="tooltip" id="tooltip">
+                            <strong>Explicação das Variáveis:</strong>
+                            <div id="tooltip-content">
+                                <!-- O conteúdo dinâmico de cada gráfico aparecerá aqui -->
+                            </div>
+                        </div>
+                        
+                        <!-- Divs para cada gráfico -->
+                        <button class="arrow-button left" onclick="prevGraph()">&#9664;</button>
+                        <div id="graph1"></div>
+                        <div id="graph2" style="display: none;"></div>
+                        <!-- Botões de navegação -->
+                        <button class="arrow-button right" onclick="nextGraph()">&#9654;</button>
+                    </div>
+                </div>
+            </div>
+                            
+            <script>
+               // Configurações iniciais para a tooltip e gráficos
+            window.onload = function() {
+                const tooltip = document.getElementById("tooltip");
+                const tooltipContent = document.getElementById("tooltip-content");
+
+                // Conteúdo específico da tooltip para cada gráfico
+                const tooltipContents = {
+                    1: `
+                        <ul>
+                            <p><strong>Torque no Eixo (N.m):</strong> Torque transmitido ao eixo do motor.</p>
+                            <p><strong>Torque Acelerante (N.m):</strong> Torque disponível para acelerar a carga.</p>
+                            <p><strong>Torque da Carga (N.m):</strong> Torque necessário para a carga.</p>
+                            <p><strong>Escorregamento (s):</strong> Diferença entre a velocidade síncrona e a do rotor.</p>
+                        </ul>
+                    `,
+                    2: `
+                        <ul>
+                            <p><strong>Corrente Rotórica (A):</strong> Corrente elétrica que circula no rotor do motor de indução</p>
+                            <p><strong>Corrente Estatorica (A):</strong> Corrente que circula no estator, responsável por criar o campo magnético girante</p>
+                        </ul>
+                    `,
+                    3: `
+                        <ul>
+
+                        </ul>
+                    `
+                };
+
+                // Variável global para controlar o gráfico atual
+                let currentGraphIndex = 1;
+                const totalGraphs = 2;
+
+                // Função para atualizar o gráfico visível
+                function updateGraph() {
+                    document.getElementById("graph1").style.display = "none";
+                    document.getElementById("graph2").style.display = "none";
+
+
+                    // Exibe o gráfico atual
+                    document.getElementById(`graph${currentGraphIndex}`).style.display = "block";
+
+                    // Renderizar o gráfico selecionado usando Plotly
+                    if (currentGraphIndex === 1) Plotly.react('graph1', graphData1.data, graphData1.layout);
+                    if (currentGraphIndex === 2) Plotly.react('graph2', graphData2.data, graphData2.layout);
+
+                }
+
+                // Função para exibir o conteúdo da tooltip para o gráfico atual
+                function showTooltipContent() {
+                    tooltipContent.innerHTML = tooltipContents[currentGraphIndex]; // Usa o índice atual
+                    tooltip.style.display = "block";
+                }
+
+                // Função para ocultar a tooltip
+                function hideTooltip() {
+                    tooltip.style.display = "none";
+                }
+
+                // Funções para navegação entre gráficos
+                function prevGraph() {
+                    currentGraphIndex = (currentGraphIndex - 1 < 1) ? totalGraphs : currentGraphIndex - 1;
+                    updateGraph();
+                }
+
+                function nextGraph() {
+                    currentGraphIndex = (currentGraphIndex + 1 > totalGraphs) ? 1 : currentGraphIndex + 1;
+                    updateGraph();
+                }
+
+                // Expondo as funções para os botões e tooltip
+                window.showTooltipContent = showTooltipContent;
+                window.hideTooltip = hideTooltip;
+                window.prevGraph = prevGraph;
+                window.nextGraph = nextGraph;
+
+                // Inicializar o primeiro gráfico ao carregar a página
+                updateGraph();
+            };
+                // Variáveis para gráficos e função de atualização dinâmica
+                const graphData1 = {{ graph_json1 | safe }};
+                const graphData2 = {{ graph_json2 | safe }};
+
+
+                let currentGraphIndex = 1;
+                const totalGraphs = 2;
+            
+                function updateGraph() {
+                    // Oculta todos os gráficos
+                    document.getElementById("graph1").style.display = "none";
+                    document.getElementById("graph2").style.display = "none";
+
+            
+                    // Exibe o gráfico atual
+                    document.getElementById(`graph${currentGraphIndex}`).style.display = "block";
+            
+                    // Renderizar o gráfico selecionado usando Plotly
+                    if (currentGraphIndex === 1) Plotly.react('graph1', graphData1.data, graphData1.layout);
+                    if (currentGraphIndex === 2) Plotly.react('graph2', graphData2.data, graphData2.layout);
+
+                }
+            
+                function prevGraph() {
+                    currentGraphIndex = (currentGraphIndex - 1 < 1) ? totalGraphs : currentGraphIndex - 1;
+                    updateGraph();
+                }
+            
+                function nextGraph() {
+                    currentGraphIndex = (currentGraphIndex + 1 > totalGraphs) ? 1 : currentGraphIndex + 1;
+                    updateGraph();
+                }
+            
+                function exportToExcel() {
+                const tables = [
+                    { sheet_name: 'Resultados da Simulação', data: {{ tables[0] | tojson if tables[0] is defined else [] }} },
+                ];
+
+                // Ordem específica para a primeira tabela
+                const orderedColumns = ['Escorregamento', 'Corrente Rotórica (A)', 'Corrente Estatórica (A)', 'Perdas atrito/ventilação (W)', 'Potência Convertida (W)', 'Potência no eixo (W)', 'Potência Consumida (W)', 'Torque no Eixo (N.m)', 'Torque na carga (N.m)', 'Torque acelerante (N.m)', 'Tempo de aceleração (seg)'];
+
+                // Aplica a ordenação de colunas
+                const tablesWithOrderedColumns = tables.map((table, index) => {
+                    if (index === 0) { // Apenas para a primeira tabela
+                        return {
+                            sheet_name: table.sheet_name,
+                            data: table.data.map(row => {
+                                const orderedRow = {};
+                                orderedColumns.forEach(col => {
+                                    // Substitui valores inválidos por 0
+                                    const value = row[col];
+                                    orderedRow[col] = (value !== undefined && value !== null && !isNaN(value)) ? value : 0;
+                                });
+                                return orderedRow;
+                            })
+                        };
+                    } else {
+                        // Retorna as tabelas restantes sem alterações
+                        return table;
+                    }
+                });
+
+                const additional_values = {{ additional_values | tojson if additional_values is defined else {} }};
+
+                // Envia os dados ao servidor para exportação
+                fetch('/export_excel', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tables: tablesWithOrderedColumns, additional_values: additional_values })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = "dados_exportados.xlsx";
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                })
+                .catch(error => console.error('Erro ao exportar para Excel:', error));
+            }
+
+                function createWordReport() {
+                    fetch('/export_word', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            n_partidas_regime: document.getElementById('n_partidas_regime').innerText
+                        }),
+                    })
+                    .then(response => response.blob())
+                    .then(blob => {
+                        const url = window.URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = "relatorio.docx";
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
+                    })
+                    .catch(error => console.error('Erro ao criar relatório Word:', error));
+                }
+            
+                window.addEventListener("beforeunload", function () {
+                    const form = document.getElementById("simulation-info");
+                    form.submit();
+                });
+            
+                function showHelp() {
+                    alert("Este gráfico mostra a relação entre torque e escorregamento. Use os botões de navegação para visualizar diferentes gráficos.");
+                }
+            </script>
+</body>
+</html>

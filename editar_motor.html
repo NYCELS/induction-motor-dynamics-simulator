@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Editar Motor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Favicon Icons -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="48x48" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <link rel="icon" type="image/png" sizes="64x64" href="{{ url_for('uploaded_file', filename='ICONE1') }}">
+    <style>
+                /* Resetar estilos padrão */
+                * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 920px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        label, select, input, button {
+            font-size: 14px;
+        }
+        .logout-button,
+        .settings-button {
+            padding: 5px 8px;
+            font-size: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logout-button {
+            background-color: #e74c3c;
+            color: #ecf0f1;
+            transition: background-color 0.3s ease;
+        }
+
+        .logout-button i {
+            margin-right: 3px;
+        }
+
+        .logout-button:hover,
+        .logout-button:focus {
+            background-color: #c0392b;
+        }
+
+        .settings-button {
+            background-color: #7f8c8d;
+            color: #ecf0f1;
+        }
+
+        .settings-button i {
+            font-size: 14px;
+        }
+
+        .settings-button:hover,
+        .settings-button:focus {
+            background-color: #95a5a6;
+        }
+
+        /* Informações do usuário */
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .user-info img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-info span {
+            font-size: 14px;
+            font-weight: 500;
+            color: #ecf0f1;
+        }
+
+        .sidebar {
+            width: 230px;
+            background-color: #1f2d3d;
+            color: #ecf0f1;
+            padding: 15px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .user-info img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-info span {
+            font-size: 14px;
+            font-weight: 500;
+            color: #ecf0f1;
+        }
+
+        /* Links de navegação */
+        .sidebar-links {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            width: 100%;
+        }
+        
+        .sidebar a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            width: 100%;
+            gap: 8px; /* Espaço entre o símbolo e o texto */
+
+        }
+
+        .sidebar a:hover,
+        .sidebar a:focus {
+        color: #ecf0f1;
+        text-decoration: none;
+        font-size: 14px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 8px 12px;
+        border-radius: 4px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        width: 100%;
+        }
+        #fator_container {
+            display: none; /* Inicialmente escondido */
+        }
+
+        select, input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .button-primary {
+            background-color: #fbff00;
+            color: black;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: bold; /* Deixa o texto em negrito */
+
+        }
+
+        .button-primary:hover {
+            background-color: #fbff00;
+        }
+
+        .button-secondary {
+            background-color: #2ecc71;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .button-secondary:hover {
+            background-color: #27ae60;
+        }
+        .form-container {
+    width: 100%;
+    max-width: 1000px; /* Aumentei a largura máxima */
+    margin-left: 250px;
+    margin-top: -40px; /* Reduzi a margem superior para subir o formulário */
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px; /* Adicionei espaço entre os formulários */
+}
+
+    .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+}
+
+.form-container h2 {
+    font-size: 23px;
+    margin-bottom: 10px;
+    margin-top: 30px; /* Ajuste este valor para descer a frase */
+    border-bottom: 2px solid #1f2d3d;
+    padding-bottom: 5px;
+}
+
+        label, select, input, button {
+            font-size: 14px;
+        }
+        .motor-selection-container {
+    display: flex;
+    align-items: center; /* Alinha verticalmente */
+    gap: 10px; /* Espaço entre o campo e o botão */
+}
+
+.motor-selection {
+    width: 250px; /* Reduzi a largura do campo */
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+.choose-motor-btn {
+    padding: 8px 12px;
+    background-color: #fbff00;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.choose-motor-btn:hover {
+    background-color: #fbff00;
+}
+/* Container para a seleção do motor e o botão */
+.motor-selection-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Espaçamento entre o campo e o botão */
+}
+
+/* Reduzindo a largura do campo de seleção */
+.motor-select {
+    width: 200px; /* Ajuste o valor conforme necessário */
+    padding: 5px;
+}
+.button-group {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+    margin-bottom: 10px;
+    gap: 5px;
+}
+.main-content {
+    margin-left: 250px;
+    padding: 30px;
+    flex: 1;
+    width: calc(100% - 250px);
+    box-sizing: border-box;
+    min-height: 100vh;
+}
+
+
+    </style>
+</head>
+<body>
+    <!-- Sidebar fixa -->
+    <div class="sidebar" id="sidebar">
+        <div class="button-group">
+            <button onclick="window.location.href='{{ url_for('logout') }}'" class="logout-button">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+
+            <button onclick="window.location.href='{{ url_for('edit_user', user_id=user.id) }}'" class="settings-button">
+                <i class="fas fa-cog"></i>
+            </button>
+        </div>
+        <div class="user-info">
+            <!-- Exemplo de exibição da foto do usuário no template -->
+            <img src="{{ url_for('static', filename=user_profile_image_url) if user_profile_image_url else url_for('static', filename='images/imagemsombra.png') }}" 
+                alt="Foto do usuário" 
+                onerror="this.onerror=null;this.src='{{ url_for('static', filename='images/imagemsombra.png') }}';">
+        
+                <span>{{ username }}</span>
+            </div>
+
+        <div class="sidebar-links">
+            <a href="{{ url_for('home') }}"><i class="fas fa-home"></i><span>Início</span></a>
+            <a href="{{ url_for('index') }}"><i class="fas fa-cogs"></i><span>Simulação</span></a>
+            <a href="{{ url_for('gerenciador_motor') }}"><i class="fas fa-cogs"></i><span>Gerenciador de Dados do Motor</span></a>
+            <a href="{{ url_for('informacoes_complementares') }}"><i class="fas fa-info-circle"></i><span>Informações Complementares do projeto</span></a>
+        </div>
+    </div>
+    
+    <div class="form-container">
+        <h2>Editor de motores cadastrados</h2>
+        <form action="{{ url_for('editar_motor') }}" method="GET">
+            <label for="motor_select">Escolha um motor para editar:</label>
+            <div class="motor-selection-container">
+                <select name="motor_id" id="motor_select" class="motor-select">
+                    <option value="">Selecione um motor</option>
+                    {% for m in motores %}
+                        <option value="{{ m.id }}" {% if m.id == request.args.get('motor_id') %}selected{% endif %}>{{ m.name }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="button-primary">Escolher Motor</button>
+            </div>
+        </form>
+        <h2>Dados do motor</h2>
+    </div>
+    
+
+    {% if request.args.get('motor_id') %}
+        <!-- Formulário de edição do motor -->
+        <div class="form-container">
+        <form action="{{ url_for('editar_motor') }}" method="POST">
+            <input type="hidden" name="motor_id" value="{{ motor.id }}">
+        
+            <label for="name">Nome:</label>
+            <input type="text" name="name" id="name" value="{{ motor.name }}" required><br>
+        
+            <label for="P">Potência (kW):</label>
+            <input type="text" name="P" id="P" value="{{ motor.P }}" required><br>
+        
+            <label for="V">Voltagem (V):</label>
+            <input type="text" name="V" id="V" value="{{ motor.V }}" required><br>
+        
+            <label for="f">Frequência (hZ):</label>
+            <input type="text" name="f" id="f" value="{{ motor.f }}" required><br>
+        
+            <label for="Fp">Fator de Potência:</label>
+            <input type="text" name="Fp" id="Fp" value="{{ motor.Fp }}" required><br>
+
+            <label for="rend">Rendimento (%):</label>
+            <input type="text" name="rend" id="rend" value="{{ motor.rend }}" required><br>
+        
+            <label for="Jm">Momento de Inércia (m²kg):</label>
+            <input type="text" name="Jm" id="Jm" value="{{ motor.Jm }}" required><br>
+        
+            <label for="Fpv">Fator de Potência em vazio:</label>
+            <input type="text" name="Fpv" id="Fpv" value="{{ motor.Fpv }}" required><br>
+        
+            <label for="Wn">Velocidade Nominal (RPM):</label>
+            <input type="text" name="Wn" id="Wn" value="{{ motor.Wn }}" required><br>
+        
+            <label for="Iv">Corrente em Vazio (A):</label>
+            <input type="text" name="Iv" id="Iv" value="{{ motor.Iv }}" required><br>
+        
+            <label for="Vf">Tensão de linha da fonte (V):</label>
+            <input type="text" name="Vf" id="Vf" value="{{ motor.Vf }}" required><br>
+        
+            <label for="Pav">Perdas de atrito e ventilação (W):</label>
+            <input type="text" name="Pav" id="Pav" value="{{ motor.Pav }}" required><br>
+        
+            <label for="Pe">Perdas ferromagneticas (W):</label>
+            <input type="text" name="Pe" id="Pe" value="{{ motor.Pe }}" required><br>
+        
+            <label for="tipo_partida">Tipo de Partida:</label>
+            <select name="tipo_partida" id="tipo_partida" required>
+                <option value="Direta">Partida Direta</option>
+                <option value="Estrela-triangulo">Partida Estrela-Triângulo</option>
+                <option value="Autotransformador">Partida com Autotransformador</option>
+            </select>
+            <div id="fator_container" style="display:none;">
+                <label for="fator">Fator do Autotransformador (%):</label>
+                <input type="text" id="fator" name="fator" placeholder="Ex: 80">
+            </div>
+
+            <label for="rs">Resistência Estator (Ω):</label>
+            <input type="text" name="rs" id="rs" value="{{ motor.rs }}" required><br>
+        
+            <label for="xs">Reatância Estator (Ω):</label>
+            <input type="text" name="xs" id="xs" value="{{ motor.xs }}" required><br>
+        
+            <label for="rr">Resistência Rotor (Ω):</label>
+            <input type="text" name="rr" id="rr" value="{{ motor.rr }}" required><br>
+        
+            <label for="xr">Reatância Rotor (Ω):</label>
+            <input type="text" name="xr" id="xr" value="{{ motor.xr }}" required><br>
+        
+            <!-- Campo Fator, inicialmente escondido -->
+            <div id="fator_container">
+                <label for="fator">Fator:</label>
+                <input type="text" name="fator" id="fator" value="{{ motor.fator }}">
+            </div>
+        
+            <button type="submit" class="button-secondary">Salvar Alterações</button>
+        </form>
+    </div>
+    {% endif %}
+</div>
+
+</body>
+<script>
+        document.getElementById('tipo_partida').addEventListener('change', function() {
+        var fatorContainer = document.getElementById('fator_container');
+        if (this.value === 'Autotransformador') {
+            fatorContainer.style.display = 'block';
+        } else {
+            fatorContainer.style.display = 'none';
+        }
+    });
+</script>
+
+</html>
